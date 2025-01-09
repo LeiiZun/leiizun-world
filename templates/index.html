@@ -25,11 +25,12 @@
       margin-bottom: 20px;
     }
 
-    video {
-      display: none;
+    img {
+      display: block;
       border: 3px solid orange;
       border-radius: 10px;
       margin-top: 20px;
+      max-width: 80%;
     }
 
     .buttons {
@@ -73,63 +74,10 @@
 </head>
 <body>
   <h1>LeiiZun World</h1>
-  <video id="video" autoplay></video>
-  <div class="buttons">
-    <button id="startBtn">Flux Vidéo</button>
-  </div>
+  <img id="video" src="/video_feed" alt="Flux vidéo">
   <div id="status">
     <span id="emoji" class="inactive">❌</span>
     <span id="text">Flux vidéo arrêté</span>
   </div>
-
-  <script>
-    const video = document.getElementById('video');
-    const startBtn = document.getElementById('startBtn');
-    const emoji = document.getElementById('emoji');
-    const text = document.getElementById('text');
-
-    let isStreaming = false;
-    let stream = null;
-
-    async function startStream() {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        video.style.display = 'block';
-        isStreaming = true;
-
-        // Change status to active
-        emoji.textContent = '✅';
-        emoji.classList.remove('inactive');
-        emoji.classList.add('active');
-        text.textContent = 'Flux vidéo actif';
-      } catch (err) {
-        alert('Erreur lors du démarrage de la caméra : ' + err.message);
-      }
-    }
-
-    function stopStream() {
-      if (stream) {
-        const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-      video.style.display = 'none';
-      isStreaming = false;
-
-      // Change status to inactive
-      emoji.textContent = '❌';
-      emoji.classList.remove('active');
-      emoji.classList.add('inactive');
-      text.textContent = 'Flux vidéo arrêté';
-    }
-
-    startBtn.addEventListener('click', () => {
-      if (isStreaming) {
-        stopStream();
-      } else {
-        startStream();
-      }
-    });
-  </script>
 </body>
 </html>
