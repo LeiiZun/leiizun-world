@@ -4,18 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leiizun World</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/logooo.png') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #1e1e1e;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        header img {
+            width: 150px;
+            height: 150px;
+            margin-left: 10px;
+        }
+        header h1 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+            font-size: 2.5rem;
+            color: #f39c12; /* Couleur orange */
+        }
+        .content {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .content button {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .content button:hover {
+            background-color: #e67e22; /* Teinte légèrement plus foncée */
+        }
+    </style>
 </head>
 <body>
+    <!-- Header Section -->
     <header>
+        <!-- Logo -->
+        <img src="{{ url_for('static', filename='images/logooo.png') }}" alt="Logo">
+        <!-- Title -->
         <h1>Leiizun World</h1>
     </header>
-    <main>
-        <div class="button-container">
-            <button onclick="alert('Programme 1 lancé')">Lancer Programme 1</button>
-            <button onclick="alert('Programme 2 lancé')">Lancer Programme 2</button>
-            <button onclick="alert('Programme 3 lancé')">Lancer Programme 3</button>
-        </div>
-    </main>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Tu peux ajouter des boutons ici -->
+        <button>Action 1</button>
+        <button>Action 2</button>
+    </div>
 </body>
 </html>
