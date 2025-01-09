@@ -1,71 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leiizun World</title>
-    <!-- Favicon -->
-    <link rel="icon" href="{{ url_for('static', filename='images/logooo.png') }}">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-        }
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            background-color: #1e1e1e;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        header img {
-            width: 150px;
-            height: 150px;
-            margin-left: 10px;
-        }
-        header h1 {
-            flex: 1;
-            text-align: center;
-            margin: 0;
-            font-size: 2.5rem;
-            color: #f39c12; /* Couleur orange */
-        }
-        .content {
-            text-align: center;
-            margin-top: 50px;
-        }
-        .content button {
-            background-color: #f39c12;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .content button:hover {
-            background-color: #e67e22; /* Teinte légèrement plus foncée */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeiiZun World</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: orange;
+      font-size: 3rem;
+      text-shadow: 2px 2px 10px rgba(255, 165, 0, 0.8);
+      margin-bottom: 20px;
+    }
+
+    video {
+      display: none;
+      border: 3px solid orange;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #222;
+      color: white;
+      border: 2px solid orange;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      margin: 0 10px;
+    }
+
+    button:hover {
+      background-color: orange;
+      color: black;
+    }
+
+    #status {
+      margin-top: 10px;
+      font-size: 1.5rem;
+    }
+
+    #status span {
+      font-size: 2rem;
+    }
+
+    .active {
+      color: limegreen;
+    }
+
+    .inactive {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <!-- Logo -->
-        <img src="{{ url_for('static', filename='images/logooo.png') }}" alt="Logo">
-        <!-- Title -->
-        <h1>Leiizun World</h1>
-    </header>
+  <h1>LeiiZun World</h1>
+  <video id="video" autoplay></video>
+  <div class="buttons">
+    <button id="startBtn">Flux Vidéo</button>
+  </div>
+  <div id="status">
+    <span id="emoji" class="inactive">❌</span>
+    <span id="text">Flux vidéo arrêté</span>
+  </div>
 
-    <!-- Main Content -->
-    <div class="content">
-        <!-- Tu peux ajouter des boutons ici -->
-        <button>Action 1</button>
-        <button>Action 2</button>
-    </div>
+  <script>
+    const video = document.getElementById('video');
+    const startBtn = document.getElementById('startBtn');
+    const emoji = document.getElementById('emoji');
+    const text = document.getElementById('text');
+
+    let isStreaming = false;
+    let stream = null;
+
+    async function startStream() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        isStreaming = true;
+
+        // Change status to active
+        emoji.textContent = '✅';
+        emoji.classList.remove('inactive');
+        emoji.classList.add('active');
+        text.textContent = 'Flux vidéo actif';
+      } catch (err) {
+        alert('Erreur lors du démarrage de la caméra : ' + err.message);
+      }
+    }
+
+    function stopStream() {
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+      video.style.display = 'none';
+      isStreaming = false;
+
+      // Change status to inactive
+      emoji.textContent = '❌';
+      emoji.classList.remove('active');
+      emoji.classList.add('inactive');
+      text.textContent = 'Flux vidéo arrêté';
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (isStreaming) {
+        stopStream();
+      } else {
+        startStream();
+      }
+    });
+  </script>
 </body>
 </html>
