@@ -1,34 +1,17 @@
-import cv2
-import socketio
-import base64
+import requests
 
-# Initialise le client WebSocket
-sio = socketio.Client()
+SERVER_URL = "http://127.0.0.1:5000"  # URL du serveur Flask
 
-# Connecte au serveur
-sio.connect('https://leiizun-world.onrender.com')  # Remplace par ton URL Render
-
-def stream_video():
-    cap = cv2.VideoCapture(0)  # Utilise la caméra par défaut
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # Encode l'image en JPEG, puis en base64
-        _, buffer = cv2.imencode('.jpg', frame)
-        frame_encoded = base64.b64encode(buffer).decode('utf-8')
-
-        # Envoie l'image encodée au serveur
-        sio.emit('video_stream', {'data': frame_encoded})
-
-    cap.release()
-
-if __name__ == '__main__':
+def send_command(command):
+    url = f"{SERVER_URL}/execute_command"
     try:
-        stream_video()
-    except KeyboardInterrupt:
-        print("Streaming arrêté.")
-    finally:
-        sio.disconnect()
+        response = requests.get(url, params={"command": command})
+        if response.status_code == 200:
+            print(response.json())
+        else:
+            print(f"Erreur {response.status_code} : {response.text}")
+    except Exception as e:
+        print(f"Erreur lors de la connexion au serveur : {e}")
+
+# Exemple : Envoie de la commande "capture_camera"
+send_command("capture_camera")

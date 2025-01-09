@@ -1,36 +1,17 @@
-from flask import Flask, render_template, Response
-import socketio
-import base64
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-sio = socketio.Server(cors_allowed_origins="*")
-app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
 
-# Stockage temporaire de l'image envoyée par le client
-video_frame = None
+@app.route('/execute_command', methods=['GET'])
+def execute_command():
+    command = request.args.get('command')
+    
+    if command == "capture_camera":
+        # Exemple de traitement pour capture_camera
+        print("Commande 'capture_camera' reçue !")
+        return jsonify({"status": "success", "message": "Commande 'capture_camera' exécutée"})
+    else:
+        return jsonify({"status": "error", "message": f"Commande inconnue : {command}"})
 
-@app.route('/')
-def index():
-    """Rendu de la page HTML."""
-    return render_template('index.html')
-
-@app.route('/video_feed')
-def video_feed():
-    """Envoie du flux vidéo aux utilisateurs."""
-    def generate():
-        global video_frame
-        while True:
-            if video_frame:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' +
-                       video_frame + b'\r\n')
-    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-@sio.on('video_stream')
-def video_stream(data):
-    """Réception des images encodées en base64 depuis le client."""
-    global video_frame
-    video_frame = base64.b64decode(data['data'])
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(debug=True)
